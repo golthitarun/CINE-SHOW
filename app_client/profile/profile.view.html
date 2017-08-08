@@ -125,11 +125,15 @@
                     </div>
                     <input type="checkbox" name="selectedGenres[]" value="878" ng-checked="vm.selection.indexOf(878) > -1" ng-click="vm.toggleSelection(878)"> Science Fiction
 
-                    <div class="md-form form-sm">
+                    <!-- <div class="md-form form-sm">
                         <i class="fa fa-key prefix"></i>
                         <input type="text" id="form21" class="form-control" ng-model="vm.newmovie.image">
                         <label for="form21">Image</label>
-                    </div>
+                    </div> -->
+                    <br>
+                    <i class="fa fa-key prefix"></i>
+                    <label for="form212">Poster</label>
+                    <input type="file" id="form212" class="form-control" file-model="vm.myFile" accept="image/*">
 
                     <i class="fa fa-pencil prefix"></i>
                     <label>Cast</label>

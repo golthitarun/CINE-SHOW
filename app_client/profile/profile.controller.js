@@ -162,6 +162,7 @@
       vm.castData.cast = vm.cast;
       vm.castData.id = id;
       vm.newmovie.id = id;
+      vm.newmovie.image = vm.myFile.name
       var addmovie = false;
       console.log(vm.newmovie);
       movieData.addMovie(vm.newmovie)
@@ -175,7 +176,7 @@
 
       });
 
-      
+
     };
 
     vm.choices = [{id: 'choice1'}, {id: 'choice2'}, {id: 'choice3'}, {id: 'choice4'}, {id: 'choice5'}];
@@ -191,6 +192,23 @@
     }
 
   }
+
+  angular.module('meanApp')
+  .directive('fileModel',['$parse', function($parse){
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs){
+        var model = $parse(attrs.fileModel);
+        var modelSetter = model.assign;
+
+        element.bind('change', function(){
+          scope.$apply(function(){
+            modelSetter(scope, element[0].files[0]);
+          });
+        });
+      }
+    };
+  }]);
 
 
 })();

@@ -8,8 +8,8 @@
     .controller('RatingController',RatingController);
 
 
-  movieCtrl.$inject = ['$location', 'meanData','review', 'favorite', 'movieData','authentication','$route','$timeout','ratingConfig','$scope','genres','SweetAlert'];
-  function movieCtrl($location, meanData, review, favorite, movieData, authentication,$route,$timeout,ratingConfig,$scope,genres, SweetAlert) {
+  movieCtrl.$inject = ['$location', 'meanData','review', 'favorite', 'movieData','authentication','$route','$timeout','ratingConfig','$scope','genres','SweetAlert','$anchorScroll'];
+  function movieCtrl($location, meanData, review, favorite, movieData, authentication,$route,$timeout,ratingConfig,$scope,genres, SweetAlert,$anchorScroll) {
     var vm = this;
     vm.user = {};
     vm.movie = {};
@@ -30,16 +30,19 @@
     vm.newdate = "";
     vm.isAdmin = false;
     vm.editReview = {};
-    movieCtrl.editValue = 1;
-    movieCtrl.newValue = 1;
+    movieCtrl.editValue = -1;
+    movieCtrl.newValue = -1;
+    vm.showsubmit = false;
+    vm.submiterror = "";
 
     /*****EDIT REVIEW****/
     var ngModelCtrl = { $setViewValue: angular.noop };
-    
+
     this.init = function(ngModelCtrl_) {
       ngModelCtrl = ngModelCtrl_;
       ngModelCtrl.$render = this.render;
       $scope.range = [0,1,2,3,4,5,6,7,8,9];
+      $scope.showsubmit = false;
     };
 
     $scope.rate = function(value) {
@@ -64,6 +67,8 @@
       }
       movieCtrl.editValue = ngModelCtrl.$viewValue;
       movieCtrl.newValue = ngModelCtrl.$viewValue;
+      $scope.showsubmit = true;
+      vm.showsubmit = true;
       //console.log(movieCtrl.editValue);
     };
 
@@ -71,7 +76,7 @@
       $scope.value = value;
       $scope.onHover({value: value});
     };
-    
+
     $scope.reset = function() {
       $scope.value = ngModelCtrl.$viewValue;
       $scope.onLeave();
@@ -129,13 +134,13 @@
 
     vm.updateReview = function(){
       console.log(movieCtrl.editValue);
-      vm.editReview.rating = movieCtrl.editValue;
+        vm.editReview.rating = movieCtrl.editValue;
 
-      review.updateReview(vm.editReview)
-      .success(function(info){
-        console.log('Review Edited');
-        $route.reload();
-      });
+        review.updateReview(vm.editReview)
+        .success(function(info){
+          console.log('Review Edited');
+          $route.reload();
+        });
     };
 
      vm.onFavorite = function () {
@@ -171,19 +176,22 @@
       vm.review.name = vm.user.name;
       vm.review.id = vm.movie.id;
       vm.review.rating = movieCtrl.newValue;
-      console.log(vm.review);
-      review
-        .postMovieReview(vm.review)
-        .success(function(){
-          console.log("Inside success");
-          //$location.path("/main");
-          $route.reload();
-        })
-        .error(function(err){
-          console.log(err.message);
-          // if(err.message = "User Already exists")
-          //   vm.credentials.message = "User Already Exists";
-        });
+      if(movieCtrl.newValue){
+      // review
+      //   .postMovieReview(vm.review)
+      //   .success(function(){
+      //     console.log("Inside success");
+      //     //$location.path("/main");
+      //     $route.reload();
+      //   })
+      //   .error(function(err){
+      //     console.log(err.message);
+      //     // if(err.message = "User Already exists")
+      //     //   vm.credentials.message = "User Already Exists";
+      //   });
+    }else{
+      vm.submiterror = "Rating is required";
+    }
     };
 
     vm.updateMovie = function(){
@@ -206,6 +214,7 @@
       console.log(vm.selection.length);
         if(vm.selection.length != 0)
           vm.movie.genre_ids = vm.selection;
+      vm.movie.image = vm.myFile.name;
       console.log(vm.movie);
       movieData.updateMovie(vm.movie).success(function(info){
         console.log('success');
@@ -284,7 +293,7 @@
   RatingController.$inject = ['$scope','ratingConfig'];
   function RatingController($scope, ratingConfig){
     var ngModelCtrl = { $setViewValue: angular.noop };
-    
+
     this.init = function(ngModelCtrl_) {
       ngModelCtrl = ngModelCtrl_;
       ngModelCtrl.$render = this.render;
@@ -312,7 +321,7 @@
                 '<i ng-repeat="r in range track by $index"' +
                     'ng-mouseenter="enter($index + 1)"' +
                     'ng-click="rate($index + 1)"' +
-                    'ng-class="$index < value ? \'fa fa-star fa-2x active\' : \'fa fa-star fa-2x\'">'+ 
+                    'ng-class="$index < value ? \'fa fa-star fa-2x active\' : \'fa fa-star fa-2x\'">'+
                 '</i>' +
               '</span>',
               controller: 'movieCtrl',
@@ -325,5 +334,22 @@
               }
             };
          }]);
+
+  angular.module('meanApp')
+  .directive('fileModel',['$parse', function($parse){
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs){
+        var model = $parse(attrs.fileModel);
+        var modelSetter = model.assign;
+
+        element.bind('change', function(){
+          scope.$apply(function(){
+            modelSetter(scope, element[0].files[0]);
+          });
+        });
+      }
+    };
+  }]);
 })
 ();

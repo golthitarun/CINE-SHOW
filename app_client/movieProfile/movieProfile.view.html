@@ -119,7 +119,7 @@
 			  </div>
 			</div>
 	    </div>
-	    <button ng-show="vm.showWriteReview" ng-click="show = 1" style="margin: 10px 20px" class="btn btn-danger col-md-3">Write a Review</button>
+	    <button ng-show="vm.showWriteReview" ng-click="show = 1;" style="margin: 10px 20px" class="btn btn-danger col-md-3">Write a Review</button>
 
 	    <form ng-show="show==1" ng-submit="vm.onSubmit()" style="margin:20px 20px; border:1px solid #333;">
 	    	<!--<div class="form-group row">
@@ -133,8 +133,8 @@
 			</div>-->
 		    <div class="form-group row" >
 		    	 <label for="review" class="col-2 col-form-label text-center" style="font-size: medium; margin-top: 15px;">Review</label>
-	 			 <div class="col-9" style="border:1px solid #333;margin-top: 10px color: white;">
-	   			 	<input class="form-control" type="textbox" id="review" placeholder="Write your review here" ng-model="vm.review.review">
+	 			 <div class="col-9" style="border:1px solid #333;margin-top: 10px; color: white;">
+	   			 	<input class="form-control" style="color:white;" type="textbox" id="review" placeholder="Write your review here" ng-model="vm.review.review">
 	  			 </div>
 		    </div>
 		    <div class="form-group row">
@@ -145,12 +145,12 @@
         <div rating ng-model="secondRating" max="10"></div>
             </div>
 
-
+            <p style="margin: 10px 40px;">{{vm.submiterror}}</p>
             <button class="btn btn-danger" type="submit" style="margin: 10px 40px;">Submit</button>
-
+            <a class="btn btn-primary" style="margin: 10px 40px;" ng-click="show = -1">Cancel</a>
 			<!--<a class="btn btn-danger" style="margin: 10px 40px;" href="/movies/{{vm.movie.id}}/review">Submit</a>-->
 		</form>
-        <div ng-show="vm.showEdit">
+        <div ng-show="vm.showEdit" id="reviewmodule">
         <form ng-submit="vm.updateReview()" style="margin:20px 20px; border:1px solid #333;">
             <div class="form-group row" >
                  <label for="review" class="col-2 col-form-label text-center" style="font-size: medium; margin-top: 15px;">Review</label>
@@ -218,10 +218,14 @@
                         </div>
                     </div>
 
-                    <i class="fa fa-pencil prefix"></i>
+                    <!-- <i class="fa fa-pencil prefix"></i>
                     <label for="form8">Poster</label>
-                    <!-- <input type="file" id="form8" class="form-control" file-model="vm.file" accept="image/*"> -->
-                    <input type="text" id="form8" class="form-control" ng-model="vm.movie.image">
+                    <input type="file" id="form8" class="form-control" file-model="vm.file" accept="image/*"> -->
+                    <!-- <input type="text" id="form8" class="form-control" ng-model="vm.movie.image"> -->
+                    <i class="fa fa-key prefix"></i>
+                    <label for="form212">Poster</label>
+                    <input type="file" id="form212" class="form-control" file-model="vm.myFile" accept="image/*">
+
 
                     <i class="fa fa-calendar"></i>
                     <label for="form21">Release Date</label>

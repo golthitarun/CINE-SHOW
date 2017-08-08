@@ -48,10 +48,10 @@
 
                                 <div class="md-form">
                                     <i class="fa fa-lock prefix"></i>
-                                    <input type="password" id="form4" class="form-control" ng-model="vm.credentials.password" ng-change="vm.checkPass()" required>
+                                    <input type="password" id="form4" class="form-control" ng-model="vm.credentials.password" ng-change="vm.checkPass()" ng-blur="vm.onblur()" required>
                                     <label for="form4">Your password</label>
                                 </div>
-                                <p>{{vm.passStrength}}</p>
+                                <p class="text-center h6" id="strength">{{vm.passStrength}}</p>
                                 <p style="color: red; text-align: center;">{{vm.credentials.message}}</p>
                                 <div class="text-center">
                                     <button class="btn btn-primary btn-lg" type="submit">Sign up</button>

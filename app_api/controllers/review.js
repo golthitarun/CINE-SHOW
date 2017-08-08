@@ -24,12 +24,14 @@ module.exports.postMovieReview = function(req, res) {
   .exec(function(err, movie){
     if(err) throw err;
 
-    var rating = movie.vote_average;
-    var count = movie.vote_count;
+    if(req.body.rating){
+      var rating = movie.vote_average;
+      var count = movie.vote_count;
 
-    rating = ((rating*count) + req.body.rating)/(count + 1);
-    movie.vote_average = Number(Math.round(rating+'e1')+'e-1');
-    movie.vote_count = count + 1;
+      rating = ((rating*count) + req.body.rating)/(count + 1);
+      movie.vote_average = Number(Math.round(rating+'e1')+'e-1');
+      movie.vote_count = count + 1;
+   }
     //console.log(movie);
     movie.save(function(err){
       if(err) throw err;
@@ -90,11 +92,29 @@ module.exports.updateReview = function(req, res){
 
       Movie.findOne({id: req.body.movie_id})
       .exec(function(err, movie){
+        var newrating;
+        if(!req.body.rating){
+          if(!review.rating){
+            newrating = movie.vote_average;
+          }else{
+            req.body.rating = review.rating;
+            newrating = ((movie.vote_average*movie.vote_count) - review.rating + req.body.rating)/movie.vote_count;
+            movie.vote_average = Number(Math.round(newrating+'e1')+'e-1');
+          }
+        }else{
+          if(!review.rating){
+            var rating = movie.vote_average;
+            var count = movie.vote_count;
 
-        var newrating = ((movie.vote_average*movie.vote_count) - review.rating + req.body.rating)/movie.vote_count;
-        movie.vote_average = Number(Math.round(newrating+'e1')+'e-1');
+            rating = ((rating*count) + req.body.rating)/(count + 1);
+            movie.vote_average = Number(Math.round(rating+'e1')+'e-1');
+            movie.vote_count = count + 1;
+          }else{
+            newrating = ((movie.vote_average*movie.vote_count) - review.rating + req.body.rating)/movie.vote_count;
+            movie.vote_average = Number(Math.round(newrating+'e1')+'e-1');
+          }
+        }
         console.log(movie);
-
         review.review = req.body.review;
         review.rating = req.body.rating;
         var tempdate = new Date();

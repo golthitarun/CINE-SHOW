@@ -177,25 +177,25 @@
       vm.review.id = vm.movie.id;
       vm.review.rating = movieCtrl.newValue;
       if(movieCtrl.newValue){
-      // review
-      //   .postMovieReview(vm.review)
-      //   .success(function(){
-      //     console.log("Inside success");
-      //     //$location.path("/main");
-      //     $route.reload();
-      //   })
-      //   .error(function(err){
-      //     console.log(err.message);
-      //     // if(err.message = "User Already exists")
-      //     //   vm.credentials.message = "User Already Exists";
-      //   });
+      review
+        .postMovieReview(vm.review)
+        .success(function(){
+          console.log("Inside success");
+          //$location.path("/main");
+          $route.reload();
+        })
+        .error(function(err){
+          console.log(err.message);
+          // if(err.message = "User Already exists")
+          //   vm.credentials.message = "User Already Exists";
+        });
     }else{
       vm.submiterror = "Rating is required";
     }
     };
 
     vm.updateMovie = function(){
-      console.log(vm.newdate);
+      console.log("Update Movie");
       vm.onUpdateMsg = "";
       if(vm.newdate != null){
         var date = vm.newdate.getDate();
@@ -214,7 +214,9 @@
       console.log(vm.selection.length);
         if(vm.selection.length != 0)
           vm.movie.genre_ids = vm.selection;
-      vm.movie.image = vm.myFile.name;
+        if(vm.myFile){
+          vm.movie.image = vm.myFile.name;
+        }
       console.log(vm.movie);
       movieData.updateMovie(vm.movie).success(function(info){
         console.log('success');
